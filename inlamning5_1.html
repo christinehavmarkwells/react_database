@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html>
     <head>
         <title>Inlämningsuppgift 5_1</title>
@@ -8,172 +9,291 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
         <link rel="stylesheet" href="css/styles.css" />
     </head>
-    <body>
+    <body> 
 
-        <div id="root"></div>
+      <div id="root"></div>
 
-        <script type="text/babel">
+      <script type="text/babel">
 
-            //Huvudkomponent som håller min databas och hanterar de funktioner
-            //som kommer användas i appen
-            var YogaPoseApp = React.createClass({
+         //Huvudkomponent som håller min databas och hanterar de funktioner
+         //som kommer användas i appen
+         var YogaPoseApp = React.createClass({
 
-               getInitialState: function() {
+            getInitialState: function() {
 
-                  return {
+               return {
 
-                     yogaPoses: [
-                        { name: "Shavasana", level: "1", type: "Resting pose" },
-                        { name: "Pigeon", level: "2", type: "Hip opener" },
-                        { name: "Dancer", level: "3", type: "Hip and chest opener" }
-                     ]
+                  yogaPoses: [
+                     { name: "Shavasana", level: "1", type: "Resting pose" },
+                     { name: "Pigeon", level: "2", type: "Hip opener" },
+                     { name: "Dancer", level: "3", type: "Hip and chest opener" }
+                  ]
 
-                  };
+               };
 
-               },
+            },
 
-               addYogaPose: function(newPose) {
+            addYogaPose: function(newPose) {
 
-                  console.log("test: add");
-                  
-                  this.state.yogaPoses.push(newPose);
-                  this.setState({
-                     //state eller props?
-                     yogaPoses: this.state.yogaPoses
-                  });
-
-               },
-
-               editYogaPose: function() {
-
-
-               },
-
-               removeYogaPose: function() {
-
-                  console.log("test: remove");
-
-                  this.state.yogaPoses.splice(index, 1);
-                  this.setState({
-                     yogaPoses: this.state.yogaPoses
-                  });
-
-               },
-
-               render: function() {
-
-                  return {
-
-                  };
-
-               }
-
-
-            });
-
-            var YogaPoseForm = React.createClass({
-
-               getInitialState: function() {
-
-                  return {
-                     name: "",
-                     level: "",
-                     type: ""
-                  };
-
-               },
-
-               handlePoseNameChange: function(event) {
-
-               },
-
-               handlePoseLevelChange: function(event) {
-
-               },
-
-               handlePoseTypeChange: function(event) {
-
-               },
-
-               handleSubmit: function(event) {
-
-                  event.preventDefault();
-
-                  var newPose = this.state;
-
-                  this.props.addYogaPose(newPose);
-
-                  this.setState({
-                     name: "",
-                     level: "",
-                     type: ""
-                  });
-
-               }
-
-            });
-
-            var YogaPoseList = React.createClass({
-
-               render: function() {
-
-                  return (
-                     <div className="yoga_pose_list">
-                        <h2>Yoga pose database</h2>
-                        <ul>
-                           {this.props.yogaPoses.map(function(yogaPose, index) {
-                                 <YogaPoseListItem
-                                    key={index}
-                                    yogaPose={yogaPose}
-                                    removeYogaPose={this.props.removeYogaPose}
-                                    editYogaPose={this.props.editYogaPose} 
-                                 />
-                           }.bind(this))}
-                        </ul>
-                     </div>
-                  )
-
-               }
-
-            });
-
-            var YogaPoseListItem = React.createClass({
-
-
-
-               render: function() {
-
-                  return (
-
-                     <form onSubmit={this.handleSubmit}>
-                        <h4>Add a yoga pose to the database</h4>
-                        <label htmlFor="addedPoseName">Name of yoga pose</label >
-                        <br/>
-                        <input id="addedPoseName" value={this.state.name} onChange={this.handleChange} />
-                        <br/>
-                        <label htmlFor="addedPoseLevel">Level of difficulty</label>
-                        <br/>
-                        <input id="addedPoseLevel" value={this.state.level} onChange={this.handleChange}/>
-                        <br/>
-                        <label htmlFor="addedPoseType">Type of pose</label>
-                        <br/>
-                        <input id="addedPoseType" value={this.state.type} onChange={this.handleChange}/>
-                        <br/>
-                        <button onClick={this.props.onClick} type="button">Add pose</button>
-                     </form>
-
-                  )
+               console.log("test: add");
                
+               this.state.yogaPoses.push(newPose);
+               this.setState({
+                  yogaPoses: this.state.yogaPoses
+               });
+
+            },
+
+            editYogaPose: function() {
+
+               console.log("test: edit");
+
+               this.setState({
+                  yogaPoses: this.state.yogaPoses
+               });
+
+               return {
+                  YogaPoseListItem: true
+                  // isEditing: true
+               };
+
+            },
+
+            removeYogaPose: function() {
+
+               console.log("test: remove");
+
+               this.state.yogaPoses.splice(this.props.index, 1);
+
+               this.setState({
+                  yogaPoses: this.state.yogaPoses
+               });
+
+            },
+
+            render: function() {
+
+               return (
+
+                  <div className="yoga_pose_app">
+                     <YogaPoseList  
+                        yogaPoses={this.state.yogaPoses} 
+                        removeYogaPose={this.removeYogaPose.bind(this)}
+                        editYogaPose={this.editYogaPose.bind(this)}
+                     />
+                     <YogaPoseForm
+                        addYogaPose={this.addYogaPose.bind(this)}
+                     />
+                  </div>
+
+               )
+
+            }
+
+
+         });
+
+         var YogaPoseForm = React.createClass({
+
+            getInitialState: function() {
+
+               return {
+                  name: "",
+                  level: "",
+                  type: ""
+               };
+
+            },
+
+            handlePoseNameChange: function(event) {
+
+               this.setState({
+                  name: event.target.value
+               });
+
+            },
+
+            handlePoseLevelChange: function(event) {
+
+               this.setState({
+                  level: event.target.value
+               });
+
+            },
+
+            handlePoseTypeChange: function(event) {
+
+               this.setState({
+                  type: event.target.value
+               });
+
+            },
+
+            handleSubmit: function(event) {
+
+               event.preventDefault();
+
+               var newPose = this.state;
+
+               this.props.addYogaPose(newPose);
+
+               this.setState({
+                  name: "",
+                  level: "",
+                  type: ""
+               });
+
+            },
+
+            render: function() {
+
+               return (
+
+                  <form onSubmit={this.handleSubmit}>
+                     <h4>Add a yoga pose to the database</h4>
+                     <label htmlFor="formPoseName">Name of yoga pose</label >
+                     <br/>
+                     <input id="formPoseName" value={this.state.name} onChange={this.handlePoseNameChange}/>
+                     <br/>
+                     <label htmlFor="formPoseLevel">Level of difficulty</label>
+                     <br/>
+                     <input id="formPoseLevel" value={this.state.level} onChange={this.handlePoseLevelChange}/>
+                     <br/>
+                     <label htmlFor="formPoseType">Type of pose</label>
+                     <br/>
+                     <input id="formPoseType" value={this.state.type} onChange={this.handlePoseTypeChange}/>
+                     <br/>
+                     <button onClick={this.handleSubmit} type="button">Add pose</button>
+                  </form>
+
+               )
+
+            }
+
+         });
+
+         var YogaPoseList = React.createClass({
+
+            render: function() {
+
+               return (
+                  <div className="yoga_pose_list">
+                     <h2>Yoga pose database</h2>
+                     <ul>
+                        {this.props.yogaPoses.map(function(pose, index) {
+                           return (
+                              <YogaPoseListItem
+                                 key={index}
+                                 yogaPose={pose}
+                                 removeYogaPose={this.props.removeYogaPose}
+                                 editYogaPose={this.props.editYogaPose} 
+                              />
+                        )
+                        }.bind(this))}
+                     </ul>
+                  </div>
+               )
+
+            }
+
+         });
+
+         var YogaPoseListItem = React.createClass({
+
+            getInitialState: function() {
+
+               return {
+                  isEditing: false
                }
 
-            });
+            },
 
-            ReactDOM.render(
+            handlePoseNameEdit: function(event) {
 
-               <YogaPoseList />,
-               document.getElementById("root")
+               this.setState({
+                  name: event.target.value
+               });
 
-            );
+            },
+
+            handlePoseLevelEdit: function(event) {
+
+               this.setState({
+                  level: event.target.value
+               });
+
+            },
+
+            handlePoseTypeEdit: function(event) {
+
+               this.setState({
+                  type: event.target.value
+               });
+
+            },
+
+            handleSubmit: function(event) {
+
+               event.preventDefault();
+
+               var newPose = this.state;
+
+               this.props.addYogaPose(newPose);
+
+               this.setState({
+                  name: "",
+                  level: "",
+                  type: ""
+               });
+
+            },
+
+            render: function() {
+
+               if (this.state.isEditing) {
+
+                  return (
+                     <form onSubmit={this.handleSubmit}>
+                        <input id="itemPoseName" value={this.props.yogaPoses.name} onChange={this.handlePoseNameEdit}/>
+                        <br/>
+                        <input id="itemPoseLevel" value={this.props.yogaPoses.level} onChange={this.handlePoseLevelEdit}/>
+                        <br/>
+                        <input id="itmePoseType" value={this.props.yogaPoses.type} onChange={this.handlePoseTypeEdit}/>
+                        <br/>
+                        <button onClick={this.handleSubmit} type="button">Add pose</button>
+                     </form>
+                  )
+                     
+               } else {
+
+                  return (
+
+                     <div>
+                        <p>Name: {this.props.yogaPose.name}
+                           <br/>
+                           Level: {this.props.yogaPose.level}
+                           <br/>
+                           Type: {this.props.yogaPose.type}</p>
+                        <button id="editButton" onClick={this.props.editYogaPose} type="button">Edit</button>
+                        <button id="removeButton" onClick={this.props.removeYogaPose} type="button">Remove</button>
+                     </div> 
+
+                  )
+
+               }
+
+               
+            
+            }
+
+         });
+
+         ReactDOM.render(
+
+            <YogaPoseApp />,
+            document.getElementById("root")
+
+         );
 
         </script>
     </body>
